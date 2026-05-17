@@ -1,0 +1,23 @@
+# Python / virtualenv
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# IDE
+.idea/
+.vscode/
+
+# Runtime caches / generated files
+cache/
+*.pkl
+*.npy
+*.json
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Environment variables
+.env
+

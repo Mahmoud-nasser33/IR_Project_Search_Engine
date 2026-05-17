@@ -1,0 +1,1397 @@
+<!-- index.html (enhanced version) -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Google But Smarter - search for books</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Caveat:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<style>
+  :root{
+    --bg:#fafafa;
+    --surface:#ffffff;
+    --surface-2:#f4f4f5;
+    --line:#e5e7eb;
+    --line-strong:#d4d4d8;
+    --text:#1f1f1f;
+    --text-2:#4b5563;
+    --text-3:#6b7280;
+    --muted:#9ca3af;
+    --sketch:#bdbdbd;
+    --g-blue:#4285F4;
+    --g-red:#EA4335;
+    --g-yellow:#FBBC05;
+    --g-green:#34A853;
+    --accent-red:#ef4444;
+    --heart:#ef4444;
+    --primary:#1a73e8;
+    --primary-hover:#1765cc;
+    --nav-bg:rgba(250,250,250,.85);
+    --hint-bg:#fef7e0;
+    --hint-line:#fde293;
+    --hint-text:#7a5a00;
+    --chip-hover-bg:#eef4ff;
+    --shadow-sm:0 1px 3px rgba(0,0,0,.04), 0 1px 2px rgba(0,0,0,.04);
+    --shadow:0 4px 14px rgba(0,0,0,.06);
+    --shadow-lg:0 24px 50px rgba(0,0,0,.14);
+  }
+  html.dark{
+    --bg:#0f1115;
+    --surface:#181b21;
+    --surface-2:#22262e;
+    --line:#2a2f38;
+    --line-strong:#3a414c;
+    --text:#e8eaed;
+    --text-2:#b8bdc7;
+    --text-3:#8b93a1;
+    --muted:#5f6773;
+    --sketch:#3a414c;
+    --g-blue:#5a9bff;
+    --g-red:#f06b62;
+    --g-yellow:#fdcf4a;
+    --g-green:#5cc77a;
+    --accent-red:#ff6b6b;
+    --heart:#ff6b6b;
+    --primary:#5a9bff;
+    --primary-hover:#7baeff;
+    --nav-bg:rgba(15,17,21,.85);
+    --hint-bg:#3b2f0d;
+    --hint-line:#5b481c;
+    --hint-text:#fbe09a;
+    --chip-hover-bg:#1f2937;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;min-height:100vh;
+    transition:background .25s ease, color .25s ease}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input,select,textarea{font-family:inherit}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:8px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--text-3)}
+
+  .nav{
+    position:sticky;top:0;z-index:30;backdrop-filter:saturate(180%) blur(14px);
+    background:var(--nav-bg);border-bottom:1px solid var(--line);
+  }
+  .nav-inner{max-width:1720px;margin:0 auto;padding:14px 32px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-logo{width:34px;height:34px;flex-shrink:0}
+  .brand-name{
+    font-family:'Inter',sans-serif;font-weight:700;font-size:22px;letter-spacing:-.3px;
+    display:inline-flex;align-items:baseline;gap:8px;
+  }
+  .g-letters{display:inline-flex}
+  .g-letters span{font-weight:500}
+  .g-letters .b{color:var(--g-blue)}
+  .g-letters .r{color:var(--g-red)}
+  .g-letters .y{color:var(--g-yellow)}
+  .g-letters .g{color:var(--g-green)}
+
+  .nav-links{display:flex;align-items:center;gap:8px;color:var(--text-2);font-size:14px}
+  .nav-link{
+    display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:10px;
+    color:var(--text-2);transition:background .12s, color .12s;
+  }
+  .nav-link:hover{background:var(--surface-2);color:var(--text)}
+  .nav-link.disabled{opacity:.45;cursor:not-allowed}
+  .nav-link.disabled:hover{background:none;color:var(--text-2)}
+  .avatar{
+    width:36px;height:36px;border-radius:50%;background:var(--surface);border:1px solid var(--line);
+    display:grid;place-items:center;color:var(--text-3);
+  }
+  .icon-btn{
+    width:36px;height:36px;border-radius:50%;background:var(--surface);border:1px solid var(--line);
+    display:grid;place-items:center;color:var(--text-2);cursor:pointer;
+    transition:background .15s, color .15s, border-color .15s;
+  }
+  .icon-btn:hover{background:var(--surface-2);color:var(--text);border-color:var(--line-strong)}
+  .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:6px}
+  .status-dot.ok{background:var(--g-green);box-shadow:0 0 6px rgba(52,168,83,.5)}
+  .status-dot.bad{background:var(--g-red)}
+  .status-dot.warn{background:var(--g-yellow)}
+
+  .shell{max-width:1720px;margin:0 auto;padding:0 32px;position:relative}
+
+  .hero{
+    padding:60px 0 30px;text-align:center;position:relative;min-height:520px;
+    display:flex;flex-direction:column;align-items:center;
+  }
+  .hero-crown{
+    width:64px;height:48px;margin:0 auto 14px;display:block;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.08));
+  }
+  html.dark .hero-crown{filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
+  .hero-title{
+    font-family:'Inter',sans-serif;font-weight:700;font-size:clamp(48px,7vw,86px);
+    line-height:1;letter-spacing:-2px;margin:0 0 14px;color:var(--text);
+    display:inline-flex;align-items:baseline;gap:18px;flex-wrap:wrap;justify-content:center;
+  }
+  .hero-title .google{display:inline-flex}
+  .hero-title .google span{font-weight:500}
+  .hero-subtitle{
+    font-family:'Caveat',cursive;font-weight:500;font-size:clamp(22px,2.4vw,30px);
+    color:var(--text-2);margin:0 0 36px;letter-spacing:.2px;
+  }
+  .hero-subtitle .underline{
+    text-decoration:underline wavy var(--accent-red);text-underline-offset:6px;
+    text-decoration-thickness:2px;
+  }
+  .search-wrap{width:100%;max-width:780px;margin:0 auto;position:relative;z-index:2}
+  .search-wrap.wide{max-width:none}
+  .search-bar{
+    display:flex;align-items:center;background:var(--surface);
+    border:1px solid var(--line);border-radius:999px;padding:6px 6px 6px 22px;
+    box-shadow:var(--shadow);transition:border-color .15s, box-shadow .15s;
+  }
+  .search-bar:focus-within{border-color:var(--primary);
+    box-shadow:0 0 0 4px rgba(26,115,232,.12), var(--shadow)}
+  .search-icon{color:var(--text-3);display:grid;place-items:center;flex-shrink:0}
+  .search-input{
+    flex:1;background:transparent;border:none;outline:none;color:var(--text);
+    font-size:16px;padding:16px 14px;font-family:inherit;
+  }
+  .search-input.rtl{direction:rtl;font-family:'IBM Plex Sans Arabic',Inter,sans-serif}
+  .search-input::placeholder{color:var(--muted)}
+  .search-btn{
+    background:var(--primary);color:#fff;font-weight:500;border-radius:999px;
+    padding:0 26px;height:44px;font-size:14.5px;display:inline-flex;align-items:center;gap:8px;
+    transition:background .12s, transform .12s;box-shadow:0 2px 6px rgba(26,115,232,.30);
+  }
+  .search-btn:hover{background:var(--primary-hover)}
+  .search-btn:active{transform:translateY(1px)}
+  .search-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+  .quick-row{
+    display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
+    margin-top:22px;color:var(--text-3);font-size:13px;align-items:center;
+  }
+  .quick-label{margin-right:4px;font-family:'Caveat',cursive;font-size:18px;color:var(--text-3)}
+  .chip{
+    background:var(--surface);color:var(--text-2);border:1px solid var(--line);
+    border-radius:999px;padding:7px 14px;font-size:13px;
+    transition:border-color .12s, color .12s, background .12s;
+  }
+  .chip:hover{border-color:var(--primary);color:var(--primary);background:var(--chip-hover-bg)}
+
+  .translation-note{
+    margin:18px auto 0;max-width:780px;display:flex;align-items:center;gap:10px;
+    padding:10px 16px;background:var(--hint-bg);border:1px solid var(--hint-line);
+    border-radius:10px;color:var(--hint-text);font-size:13.5px;
+  }
+
+  .doodle{
+    position:absolute;color:var(--sketch);pointer-events:none;z-index:1;
+    font-family:'Caveat',cursive;font-weight:500;
+  }
+  .doodle .note{font-size:18px;line-height:1.2;color:#9ca3af;display:block}
+  .doodle .note .u{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px}
+  .doodle .arrow{display:block;color:#bdbdbd}
+  .doodle svg{display:block}
+  .doodle-tl{top:30px;left:0;width:200px;text-align:center}
+  .doodle-tr{top:30px;right:0;width:200px;text-align:center}
+  .doodle-bl{top:360px;left:0;width:200px;text-align:center}
+  .doodle-br{top:360px;right:0;width:200px;text-align:center}
+  @media (max-width:1100px){.doodle{display:none}}
+
+  .heart-row{
+    text-align:center;margin:50px 0 30px;color:var(--text-3);font-size:13.5px;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .heart-row .heart{color:var(--heart);font-size:14px}
+
+  .feat-section{
+    width:100%;max-width:1040px;margin:36px auto 0;position:relative;z-index:2;
+  }
+  .feat-eyebrow{
+    display:flex;align-items:center;justify-content:center;gap:14px;
+    color:var(--text-3);font-family:'Caveat',cursive;font-size:22px;margin-bottom:18px;
+  }
+  .feat-eyebrow::before, .feat-eyebrow::after{
+    content:"";flex:0 0 60px;height:1px;background:var(--line);
+  }
+  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .feat-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:14px;
+    padding:22px 20px;text-align:left;box-shadow:var(--shadow-sm);
+    transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .feat-card:hover{
+    transform:translateY(-2px);border-color:var(--line-strong);box-shadow:var(--shadow);
+  }
+  .feat-icon{
+    width:40px;height:40px;border-radius:10px;display:grid;place-items:center;
+    margin-bottom:14px;background:var(--chip-hover-bg);color:var(--primary);
+  }
+  .feat-icon.red{color:var(--g-red)}
+  .feat-icon.green{color:var(--g-green)}
+  .feat-h{font-weight:600;font-size:15px;color:var(--text);margin:0 0 6px;letter-spacing:-.1px}
+  .feat-p{font-size:13px;color:var(--text-2);line-height:1.6;margin:0}
+  .feat-p code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;
+    background:var(--surface-2);padding:1px 6px;border-radius:5px;color:var(--text);
+  }
+
+  .genre-jump{
+    width:100%;max-width:780px;margin:34px auto 0;text-align:center;position:relative;z-index:2;
+  }
+  .genre-jump-label{
+    font-family:'Caveat',cursive;font-size:20px;color:var(--text-3);margin-bottom:10px;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+  }
+  .genre-jump-label::before, .genre-jump-label::after{
+    content:"";flex:0 0 40px;height:1px;background:var(--line);
+  }
+  .genre-jump-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+
+  @media (max-width:820px){
+    .feat-grid{grid-template-columns:1fr}
+    .feat-section{padding:0 8px}
+  }
+
+  .toolbar{
+    display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+    margin:30px 0 18px;padding:14px 18px;
+    background:var(--surface);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow-sm);
+  }
+  .results-meta{color:var(--text-2);font-size:13.5px}
+  .results-meta b{color:var(--text);font-weight:600}
+  .toolbar-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:3px}
+  .seg button{
+    padding:7px 14px;border-radius:999px;font-size:12.5px;color:var(--text-2);
+    transition:background .12s, color .12s;
+  }
+  .seg button:hover{color:var(--text)}
+  .seg button.active{background:var(--surface);color:var(--primary);font-weight:600;
+    box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .seg button:disabled{opacity:.4;cursor:not-allowed}
+  .select{
+    background:var(--surface);border:1px solid var(--line);border-radius:10px;
+    padding:8px 12px;font-size:13px;color:var(--text-2);outline:none;
+  }
+  .select:focus{border-color:var(--primary)}
+
+  .layout{display:grid;grid-template-columns:300px 1fr;gap:28px}
+  .sidebar{
+    background:var(--surface);border:1px solid var(--line);border-radius:14px;
+    padding:20px;height:fit-content;position:sticky;top:80px;max-height:calc(100vh - 100px);overflow:auto;
+    box-shadow:var(--shadow-sm);
+  }
+  .sidebar-section{margin-bottom:22px}
+  .sidebar-section:last-child{margin-bottom:0}
+  .sidebar-title{
+    font-weight:600;font-size:13.5px;color:var(--text);
+    margin:0 0 10px;display:flex;align-items:center;justify-content:space-between;
+    text-transform:uppercase;letter-spacing:.5px;
+  }
+  .sidebar-title button{font-size:11px;color:var(--text-3);font-weight:500;text-transform:none;letter-spacing:0}
+  .sidebar-title button:hover{color:var(--primary)}
+  .filter-list{display:flex;flex-direction:column;gap:4px;max-height:240px;overflow:auto;padding-right:4px}
+  .filter-row{
+    display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2);
+    cursor:pointer;padding:5px 6px;border-radius:6px;transition:background .1s;
+  }
+  .filter-row:hover{background:var(--surface-2);color:var(--text)}
+  .filter-row input{accent-color:var(--primary);flex-shrink:0}
+  .filter-row span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .year-row{display:flex;gap:8px;align-items:center}
+  .filter-search, .year-row input{
+    background:var(--surface-2);border:1px solid var(--line);border-radius:8px;
+    padding:8px 10px;font-size:13px;color:var(--text);outline:none;
+  }
+  .filter-search{width:100%;margin-bottom:8px}
+  .year-row input{flex:1;min-width:0}
+  .filter-search:focus, .year-row input:focus{border-color:var(--primary)}
+
+  .results{display:grid;gap:14px}
+  .card{
+    display:grid;grid-template-columns:100px 1fr;gap:20px;align-items:start;
+    background:var(--surface);border:1px solid var(--line);border-radius:14px;
+    padding:20px;transition:border-color .15s, transform .15s, box-shadow .15s;
+  }
+  .card:hover{border-color:var(--line-strong);transform:translateY(-1px);box-shadow:var(--shadow)}
+  .cover{
+    aspect-ratio:2/3;width:100px;border-radius:8px;display:grid;place-items:center;
+    color:#fff;font-weight:700;font-size:32px;
+    box-shadow:0 6px 16px rgba(0,0,0,.10);
+    background:linear-gradient(160deg,#4285F4,#1a4ea8);
+    position:relative;overflow:hidden;flex-shrink:0;
+  }
+  .cover::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(255,255,255,.12),transparent 40%);pointer-events:none}
+  .cover-letter{z-index:1}
+  .cover-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    opacity:0;transition:opacity .25s ease;z-index:2}
+  .cover-img.loaded{opacity:1}
+  .cover-wrap{position:relative;width:100px;flex-shrink:0}
+  .fav-btn{
+    position:absolute;top:6px;right:6px;z-index:3;
+    width:30px;height:30px;border-radius:50%;
+    background:rgba(0,0,0,.45);backdrop-filter:blur(4px);
+    -webkit-backdrop-filter:blur(4px);
+    display:grid;place-items:center;color:#fff;
+    border:none;cursor:pointer;
+    transition:transform .15s ease, background .15s ease, color .15s ease;
+  }
+  .fav-btn:hover{background:rgba(0,0,0,.65);transform:scale(1.08)}
+  .fav-btn.liked{color:var(--heart)}
+  .fav-btn.liked:active{transform:scale(.92)}
+  @keyframes heart-pop{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1)}}
+  .fav-btn.just-liked svg{animation:heart-pop .35s ease}
+  .card-body{min-width:0}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+  .card-title{
+    font-weight:600;font-size:19px;letter-spacing:-.2px;
+    margin:0 0 4px;line-height:1.3;color:var(--text);
+  }
+  .card-meta{color:var(--text-2);font-size:13.5px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .card-meta b{color:var(--text);font-weight:500}
+  .card-meta .sep{color:var(--text-3)}
+  .relevance{
+    display:flex;align-items:center;gap:8px;color:var(--text-3);font-size:11px;
+    text-transform:uppercase;letter-spacing:1px;font-weight:600;flex-shrink:0;
+  }
+  .rel-bar{width:55px;height:5px;background:var(--surface-2);border-radius:3px;overflow:hidden}
+  .rel-fill{height:100%;background:linear-gradient(90deg,var(--g-blue),var(--g-green));border-radius:3px}
+  .card-genres{margin:10px 0 12px;display:flex;flex-wrap:wrap;gap:6px}
+  .genre{
+    font-size:11.5px;background:var(--surface-2);color:var(--text-2);
+    border:1px solid var(--line);border-radius:6px;padding:3px 9px;
+  }
+  .card-snippet{color:var(--text-2);font-size:14px;line-height:1.65;margin:0 0 12px}
+  .card-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .btn-ghost{
+    font-size:12.5px;color:var(--text-2);background:var(--surface-2);
+    border:1px solid var(--line);border-radius:999px;padding:6px 14px;
+    transition:all .12s;display:inline-flex;align-items:center;gap:6px;
+  }
+  .btn-ghost:hover{color:var(--primary);border-color:var(--primary);background:var(--chip-hover-bg)}
+  .btn-ghost.accent:hover{color:var(--g-red);border-color:var(--g-red);background:var(--hint-bg);filter:hue-rotate(-30deg)}
+
+  .similar-strip{
+    margin-top:14px;padding:14px;background:var(--surface-2);border:1px solid var(--line);
+    border-radius:10px;
+  }
+  .similar-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;
+    font-size:12.5px;color:var(--text-2)}
+  .similar-head b{color:var(--text);font-weight:600}
+  .similar-list{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+  .similar-item{flex-shrink:0;width:120px;cursor:pointer}
+  .similar-cover{
+    aspect-ratio:2/3;width:120px;border-radius:6px;display:grid;place-items:center;
+    color:#fff;font-weight:700;font-size:22px;
+    position:relative;overflow:hidden;margin-bottom:6px;transition:transform .15s;
+  }
+  .similar-item:hover .similar-cover{transform:translateY(-2px)}
+  .similar-title{font-size:12px;color:var(--text);font-weight:500;line-height:1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    display: -webkit-box; /* Maintain for older WebKit support */
+    -webkit-box-orient:vertical}
+  .similar-author{font-size:11px;color:var(--text-3);margin-top:2px}
+
+  .empty{text-align:center;padding:60px 20px;color:var(--text-3)}
+  .empty-icon{
+    width:60px;height:60px;border-radius:14px;margin:0 auto 18px;
+    background:var(--surface);border:1px solid var(--line);
+    display:grid;place-items:center;color:var(--primary);
+  }
+  .empty h3{font-weight:600;font-size:20px;color:var(--text);margin:0 0 6px}
+  .empty p{margin:0;font-size:14px;max-width:400px;margin:0 auto;line-height:1.6}
+
+  .error{
+    background:var(--hint-bg);border:1px solid var(--accent-red);
+    color:var(--accent-red);border-radius:12px;padding:14px 18px;font-size:14px;margin:14px 0;
+  }
+
+  .spinner{
+    display:inline-block;width:16px;height:16px;border-radius:50%;
+    border:2px solid rgba(255,255,255,.30);border-top-color:#fff;
+    animation:spin .7s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .skeleton{
+    background:var(--surface);border:1px solid var(--line);border-radius:14px;
+    padding:20px;display:grid;grid-template-columns:100px 1fr;gap:20px;
+  }
+  .skl{background:linear-gradient(90deg,var(--surface-2),var(--bg),var(--surface-2));
+       background-size:200% 100%;animation:shimmer 1.4s linear infinite;border-radius:6px}
+  @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+
+  .modal-backdrop{
+    position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);
+    z-index:40;animation:fadeIn .15s ease;
+  }
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .modal{
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:min(720px, 92vw);max-height:88vh;overflow:auto;z-index:41;
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow-lg);padding:28px;
+  }
+  .modal-head{display:flex;gap:18px;align-items:flex-start;margin-bottom:14px}
+  .modal-head .cover{width:120px;font-size:36px}
+  .modal-title{font-weight:700;font-size:26px;line-height:1.2;margin:0 0 6px;color:var(--text);letter-spacing:-.3px}
+  .modal-meta{color:var(--text-2);font-size:14.5px}
+  .modal-close{
+    position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:8px;
+    display:grid;place-items:center;background:var(--surface-2);color:var(--text-2);
+    transition:background .12s, color .12s;
+  }
+  .modal-close:hover{background:var(--line);color:var(--text)}
+  .modal-summary{color:var(--text-2);font-size:15px;line-height:1.75;margin:18px 0;white-space:pre-wrap}
+
+  .history-pop{
+    position:absolute;top:60px;right:32px;width:280px;
+    background:var(--surface);border:1px solid var(--line);border-radius:12px;
+    box-shadow:var(--shadow-lg);padding:14px;z-index:35;
+  }
+  .history-pop h4{margin:0 0 10px;font-size:13px;color:var(--text-3);
+    text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+  .history-pop .row{padding:8px 10px;border-radius:8px;font-size:13.5px;cursor:pointer;
+    color:var(--text-2);transition:background .1s, color .1s}
+  .history-pop .row:hover{background:var(--surface-2);color:var(--text)}
+  .history-pop .empty-h{color:var(--muted);font-size:13px;padding:6px 10px}
+
+  .collections-pop{
+    position:absolute;top:60px;right:32px;width:520px;max-width:90vw;
+    background:var(--surface);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow-lg);padding:18px;z-index:35;
+  }
+  .collections-pop h4{margin:0 0 4px;font-size:14px;color:var(--text);font-weight:600}
+  .collections-pop p.sub{margin:0 0 14px;color:var(--text-3);font-size:12.5px}
+  .collections-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;
+    max-height:380px;overflow:auto;
+  }
+  .collections-grid button{
+    text-align:left;padding:10px 12px;border-radius:10px;background:var(--surface-2);
+    border:1px solid var(--line);color:var(--text);font-size:13.5px;font-weight:500;
+    cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:space-between;gap:8px;
+  }
+  .collections-grid button:hover{border-color:var(--primary);color:var(--primary);background:var(--chip-hover-bg)}
+  .collections-grid button .count{color:var(--text-3);font-size:11.5px;font-weight:500}
+
+  .footer{
+    margin-top:80px;padding:32px 22px;border-top:1px solid var(--line);
+    text-align:center;color:var(--muted);font-size:13px;
+  }
+  .footer b{color:var(--text-2)}
+
+  @media (max-width:980px){
+    .layout{grid-template-columns:1fr}
+    .sidebar{position:static;max-height:none}
+    .hero{min-height:0;padding:40px 0 24px}
+  }
+  @media (max-width:680px){
+    .nav-link.label{display:none}
+    .hero{padding:30px 0 16px}
+    .card{grid-template-columns:70px 1fr;gap:14px;padding:16px}
+    .cover{width:70px;font-size:24px}
+    .cover-wrap{width:70px}
+    .fav-btn{width:26px;height:26px;top:4px;right:4px}
+    .toolbar{flex-direction:column;align-items:stretch}
+    .toolbar-right{justify-content:space-between}
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useCallback, useMemo, useRef } = React;
+
+const API_BASE = "http://127.0.0.1:5000";
+
+const MODES = [
+  { id: "tfidf",    label: "Standard", hint: "Fast TF-IDF keyword match" },
+  { id: "rocchio",  label: "Refined",  hint: "Boosts using top matches (Rocchio)" },
+  { id: "word2vec", label: "Smart",    hint: "Expands with Word2Vec neighbours" },
+  { id: "bert",     label: "Deep",     hint: "Sentence-BERT semantic rerank" },
+];
+
+const SORTS = [
+  { id: "relevance", label: "Relevance" },
+  { id: "title",     label: "Title A-Z" },
+  { id: "author",    label: "Author A-Z" },
+  { id: "year_desc", label: "Newest first" },
+  { id: "year_asc",  label: "Oldest first" },
+];
+
+// Default suggestions - will be replaced with API data
+const SUGGESTIONS_EN = [
+  "science fiction space exploration",
+  "mystery detective thriller",
+  "romantic love story",
+  "historical fiction",
+  "fantasy magic adventure",
+  "horror supernatural",
+  "biography true story",
+  "self help personal growth",
+  "books in romance",
+  "books in mystery",
+  "books in science fiction",
+  "books in fantasy",
+  "books in thriller",
+  "books in horror",
+  "books in biography"
+];
+
+const SUGGESTIONS_AR = [
+  "رواية خيال علمي",
+  "قصة رعب",
+  "مغامرات فانتازيا",
+  "رحلة بحث عن الحقيقة",
+  "كتاب تطوير ذات"
+];
+
+const COVER_PALETTES = [
+  ["#4285F4","#1a4ea8"], ["#EA4335","#a02520"], ["#34A853","#1e6e36"],
+  ["#FBBC05","#a07a00"], ["#7c4dff","#3d1f99"], ["#00897b","#004d40"],
+  ["#e91e63","#880e4f"], ["#ff7043","#bf360c"], ["#5e35b1","#311b92"],
+];
+function paletteFor(id){ return COVER_PALETTES[(id||0) % COVER_PALETTES.length]; }
+function isArabic(s){ return /[؀-ۿ]/.test(s || ""); }
+
+const HISTORY_KEY = "gbs-history";
+const loadHistory = () => { try{ return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]"); }catch{return []} };
+const saveHistory = (h) => localStorage.setItem(HISTORY_KEY, JSON.stringify(h.slice(0, 12)));
+
+const LIKES_KEY = "gbs-likes";
+const loadLikes = () => {
+  try { return new Set(JSON.parse(localStorage.getItem(LIKES_KEY) || "[]")); }
+  catch { return new Set(); }
+};
+const saveLikes = (s) => localStorage.setItem(LIKES_KEY, JSON.stringify([...s]));
+
+function buyUrlFor(item){
+  const q = [item.title, item.author].filter(Boolean).join(" ");
+  return `https://www.amazon.eg/s?k=${encodeURIComponent(q)}&i=stripbooks`;
+}
+
+function GoogleWord({size}){
+  return (
+    <span className="google" style={{fontSize:size}}>
+      <span style={{color:"var(--g-blue)"}}>G</span>
+      <span style={{color:"var(--g-red)"}}>o</span>
+      <span style={{color:"var(--g-yellow)"}}>o</span>
+      <span style={{color:"var(--g-blue)"}}>g</span>
+      <span style={{color:"var(--g-green)"}}>l</span>
+      <span style={{color:"var(--g-red)"}}>e</span>
+    </span>
+  );
+}
+
+function CrownIcon(){
+  return (
+    <svg className="hero-crown" viewBox="0 0 64 48" fill="none"
+         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M6 40 L6 16 L20 28 L32 8 L44 28 L58 16 L58 40 Z"
+            fill="#FBBC05" stroke="#1f1f1f" strokeWidth="1.6"
+            strokeLinejoin="round" strokeLinecap="round"/>
+      <rect x="6" y="36" width="52" height="8" rx="1"
+            fill="#EA4335" stroke="#1f1f1f" strokeWidth="1.6"/>
+      <circle cx="6"  cy="16" r="3" fill="#4285F4" stroke="#1f1f1f" strokeWidth="1.2"/>
+      <circle cx="32" cy="8"  r="3.5" fill="#34A853" stroke="#1f1f1f" strokeWidth="1.2"/>
+      <circle cx="58" cy="16" r="3" fill="#4285F4" stroke="#1f1f1f" strokeWidth="1.2"/>
+      <circle cx="32" cy="40" r="1.6" fill="#FBBC05" stroke="#1f1f1f" strokeWidth="1"/>
+    </svg>
+  );
+}
+
+function BrandLogo(){
+  return (
+    <svg className="brand-logo" viewBox="0 0 40 40" fill="none">
+      <rect x="6" y="22" width="28" height="6" rx="1" fill="#4285F4"/>
+      <rect x="8" y="16" width="24" height="6" rx="1" fill="#EA4335"/>
+      <rect x="10" y="10" width="20" height="6" rx="1" fill="#FBBC05"/>
+      <rect x="6" y="22" width="28" height="6" rx="1" stroke="#1f1f1f" strokeWidth="1.2"/>
+      <rect x="8" y="16" width="24" height="6" rx="1" stroke="#1f1f1f" strokeWidth="1.2"/>
+      <rect x="10" y="10" width="20" height="6" rx="1" stroke="#1f1f1f" strokeWidth="1.2"/>
+    </svg>
+  );
+}
+
+function SearchIcon({size=20}){return(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>);}
+function BookIcon({size=18}){return(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>);}
+function FilterIcon({size=16}){return(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>);}
+function AdvIcon({size=16}){return(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>);}
+function CollectionIcon({size=16}){return(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>);}
+function HistoryIcon({size=16}){return(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg>);}
+function UserIcon({size=18}){return(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>);}
+function SparkleIcon({size=13}){return(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg>);}
+function CloseIcon({size=16}){return(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>);}
+function LangIcon({size=14}){return(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 8h14M9 4v4M12 20l4-9 4 9M14.5 17h3M3 12c0 4 3 8 6 8M9 12c0 4-3 8-6 8"/></svg>);}
+function SunIcon({size=18}){return(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>);}
+function MoonIcon({size=18}){return(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>);}
+function HeartIcon({size=16, filled=false}){
+  return filled
+    ? (<svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.2-4.35-9.6-9C.86 8.85 2.6 4.5 6.6 4.5c2.1 0 3.6 1.05 5.4 3 1.8-1.95 3.3-3 5.4-3 4 0 5.74 4.35 4.2 7.5C19.2 16.65 12 21 12 21z"/></svg>)
+    : (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>);
+}
+function CartIcon({size=13}){return(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>);}
+function BrainIcon({size=20}){return(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5a3 3 0 1 0-5.83 1A2.5 2.5 0 0 0 5 11a2.5 2.5 0 0 0 2 4 2.5 2.5 0 0 0 5 0V5z"/><path d="M12 5a3 3 0 1 1 5.83 1A2.5 2.5 0 0 1 19 11a2.5 2.5 0 0 1-2 4 2.5 2.5 0 0 1-5 0V5z"/></svg>);}
+function GlobeIcon({size=20}){return(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>);}
+function SummaryIcon({size=20}){return(<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h14a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2V4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>);}
+
+function StackBooksSketch(){
+  return (
+    <svg width="130" height="100" viewBox="0 0 130 100" fill="none" stroke="#bdbdbd" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M15 88 L115 88 L115 78 L15 78 Z" />
+      <path d="M22 78 L108 78 L108 66 L22 66 Z" />
+      <path d="M18 66 L112 66 L112 54 L18 54 Z" />
+      <path d="M25 54 L105 54 L105 42 L25 42 Z" />
+      <path d="M30 88 L30 95 M50 88 L50 92 M80 88 L80 94" />
+    </svg>
+  );
+}
+function OpenBookSketch(){
+  return (
+    <svg width="140" height="110" viewBox="0 0 140 110" fill="none" stroke="#bdbdbd" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10 35 Q40 25 68 32 L68 95 Q40 88 10 95 Z"/>
+      <path d="M130 35 Q100 25 72 32 L72 95 Q100 88 130 95 Z"/>
+      <path d="M22 45 L60 50 M22 55 L60 60 M22 65 L60 70 M22 75 L60 80"/>
+      <path d="M80 50 L118 45 M80 60 L118 55 M80 70 L118 65 M80 80 L118 75"/>
+    </svg>
+  );
+}
+function CoffeeSketch(){
+  return (
+    <svg width="120" height="120" viewBox="0 0 120 120" fill="none" stroke="#bdbdbd" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M55 28 Q52 22 56 16 Q60 10 56 4" />
+      <path d="M68 28 Q65 22 69 16 Q73 10 69 4" />
+      <path d="M25 38 L25 88 Q25 100 40 100 L80 100 Q95 100 95 88 L95 38 Z"/>
+      <path d="M95 50 L105 50 Q113 50 113 60 L113 72 Q113 82 105 82 L95 82"/>
+      <path d="M30 92 L90 92"/>
+    </svg>
+  );
+}
+function StackArrowSketch(){
+  return (
+    <svg width="140" height="110" viewBox="0 0 140 110" fill="none" stroke="#bdbdbd" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M30 95 L120 95 L120 84 L30 84 Z"/>
+      <path d="M36 84 L114 84 L114 72 L36 72 Z"/>
+      <path d="M30 72 L120 72 L120 60 L30 60 Z"/>
+      <path d="M40 60 L110 60 L110 48 L40 48 Z"/>
+      <path d="M20 30 Q35 22 50 36" />
+      <path d="M48 30 L52 38 L43 38" />
+    </svg>
+  );
+}
+
+function Cover({title, doc_id, cover_url, big}){
+  const letter = (title || "?").trim().charAt(0).toUpperCase();
+  const [from,to] = paletteFor(doc_id);
+  const [loaded,setLoaded] = useState(false);
+  const [failed,setFailed] = useState(false);
+  return (
+    <div className="cover" style={{background:`linear-gradient(160deg, ${from}, ${to})`, width: big ? 120 : undefined, fontSize: big ? 36 : undefined}}>
+      <span className="cover-letter">{letter}</span>
+      {cover_url && !failed && (
+        <img src={cover_url} alt={title} loading="lazy"
+             className={`cover-img ${loaded ? "loaded" : ""}`}
+             onLoad={() => setLoaded(true)}
+             onError={() => setFailed(true)} />
+      )}
+    </div>
+  );
+}
+
+function SkeletonCard(){
+  return (
+    <div className="skeleton">
+      <div className="skl" style={{aspectRatio:"2/3",width:"100px"}}></div>
+      <div>
+        <div className="skl" style={{height:22,width:"60%",marginBottom:8}}></div>
+        <div className="skl" style={{height:14,width:"30%",marginBottom:14}}></div>
+        <div className="skl" style={{height:13,width:"100%",marginBottom:6}}></div>
+        <div className="skl" style={{height:13,width:"95%",marginBottom:6}}></div>
+        <div className="skl" style={{height:13,width:"70%"}}></div>
+      </div>
+    </div>
+  );
+}
+
+function SimilarStrip({items, onPick}){
+  if(!items || items.length === 0) return null;
+  return (
+    <div className="similar-strip">
+      <div className="similar-head">
+        <span><b>Similar books</b> &middot; closest by sentence-BERT embedding</span>
+      </div>
+      <div className="similar-list">
+        {items.map(it => {
+          const [from,to] = paletteFor(it.doc_id);
+          return (
+            <div key={it.doc_id} className="similar-item" onClick={() => onPick && onPick(it)}>
+              <div className="similar-cover" style={{background:`linear-gradient(160deg, ${from}, ${to})`}}>
+                <span className="cover-letter">{(it.title||"?").charAt(0).toUpperCase()}</span>
+                {it.cover_url && <img src={it.cover_url} alt={it.title} loading="lazy" className="cover-img loaded" />}
+              </div>
+              <div className="similar-title">{it.title}</div>
+              <div className="similar-author">{it.author}</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ResultCard({item, maxScore, onSimilar, similar, onOpen, liked, onToggleLike}){
+  const rel = maxScore > 0 ? Math.max(0.15, Math.min(1, item.score / maxScore)) : 0;
+  const genres = (item.genres || []).slice(0, 3);
+  const [animLike, setAnimLike] = useState(false);
+  const handleLike = (e) => {
+    e.stopPropagation();
+    const willLike = !liked;
+    onToggleLike(item.doc_id);
+    if(willLike){
+      setAnimLike(true);
+      setTimeout(() => setAnimLike(false), 380);
+    }
+  };
+  return (
+    <article className="card">
+      <div className="cover-wrap">
+        <Cover title={item.title} doc_id={item.doc_id} cover_url={item.cover_url} />
+        <button
+          type="button"
+          className={`fav-btn ${liked ? "liked" : ""} ${animLike ? "just-liked" : ""}`}
+          onClick={handleLike}
+          aria-pressed={liked}
+          aria-label={liked ? "Remove from favorites" : "Add to favorites"}
+          title={liked ? "Remove from favorites" : "Add to favorites"}
+        >
+          <HeartIcon size={16} filled={liked} />
+        </button>
+      </div>
+      <div className="card-body">
+        <div className="card-top">
+          <div style={{minWidth:0,flex:1}}>
+            <h3 className="card-title">{item.title}</h3>
+            <div className="card-meta">
+              <span>by <b>{item.author}</b></span>
+              {item.year && <><span className="sep">&middot;</span><span>{item.year}</span></>}
+            </div>
+          </div>
+          <div className="relevance" title={`Relevance score: ${item.score.toFixed(3)}`}>
+            <div className="rel-bar"><div className="rel-fill" style={{width:`${rel*100}%`}}></div></div>
+          </div>
+        </div>
+        {genres.length > 0 && (
+          <div className="card-genres">
+            {genres.map((g, i) => <span key={i} className="genre">{g}</span>)}
+          </div>
+        )}
+        <p className="card-snippet">{item.snippet}</p>
+        <div className="card-actions">
+          <button className="btn-ghost" onClick={() => onOpen(item)}>
+            <BookIcon size={13} /> View summary
+          </button>
+          <button className="btn-ghost accent" onClick={() => onSimilar(item)}>
+            <SparkleIcon size={13} /> Find similar
+          </button>
+          <a className="btn-ghost"
+             href={buyUrlFor(item)}
+             target="_blank"
+             rel="noopener noreferrer"
+             title="Open Amazon.eg search for this book">
+            <CartIcon size={13} /> Buy on Amazon
+          </a>
+        </div>
+        {similar && <SimilarStrip items={similar} onPick={onOpen} />}
+      </div>
+    </article>
+  );
+}
+
+function FilterPanel({stats, selGenres, selAuthors, yearMin, yearMax, onChange}){
+  const [genreQuery,setGenreQuery] = useState("");
+  const [authorQuery,setAuthorQuery] = useState("");
+  if(!stats) return null;
+  const genres = (stats.top_genres || []).filter(g => g.toLowerCase().includes(genreQuery.toLowerCase()));
+  const authors = (stats.top_authors || []).filter(a => a.toLowerCase().includes(authorQuery.toLowerCase()));
+  const toggle = (arr, v) => arr.includes(v) ? arr.filter(x=>x!==v) : [...arr, v];
+  const reset = () => onChange({genres:[], authors:[], yearMin:"", yearMax:""});
+  const hasAny = selGenres.length || selAuthors.length || yearMin || yearMax;
+  return (
+    <aside className="sidebar" id="filters-sidebar">
+      <div className="sidebar-section">
+        <div className="sidebar-title">
+          <span>Filters</span>
+          {hasAny ? <button onClick={reset}>Clear all</button> : null}
+        </div>
+      </div>
+      <div className="sidebar-section">
+        <div className="sidebar-title"><span>Year</span></div>
+        <div className="year-row">
+          <input type="number" placeholder="From" value={yearMin}
+                 onChange={e => onChange({yearMin: e.target.value})} />
+          <input type="number" placeholder="To" value={yearMax}
+                 onChange={e => onChange({yearMax: e.target.value})} />
+        </div>
+      </div>
+      <div className="sidebar-section">
+        <div className="sidebar-title">
+          <span>Genres {selGenres.length > 0 && <small style={{color:"var(--primary)",marginLeft:6}}>{selGenres.length}</small>}</span>
+        </div>
+        <input type="text" placeholder="Search genres..." value={genreQuery}
+               onChange={e=>setGenreQuery(e.target.value)} className="filter-search" />
+        <div className="filter-list">
+          {genres.slice(0,30).map(g => (
+            <label key={g} className="filter-row">
+              <input type="checkbox" checked={selGenres.includes(g)}
+                     onChange={() => onChange({genres: toggle(selGenres, g)})} />
+              <span>{g}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+      <div className="sidebar-section">
+        <div className="sidebar-title">
+          <span>Authors {selAuthors.length > 0 && <small style={{color:"var(--primary)",marginLeft:6}}>{selAuthors.length}</small>}</span>
+        </div>
+        <input type="text" placeholder="Search authors..." value={authorQuery}
+               onChange={e=>setAuthorQuery(e.target.value)} className="filter-search" />
+        <div className="filter-list">
+          {authors.slice(0,40).map(a => (
+            <label key={a} className="filter-row">
+              <input type="checkbox" checked={selAuthors.includes(a)}
+                     onChange={() => onChange({authors: toggle(selAuthors, a)})} />
+              <span>{a}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+function DetailModal({doc, onClose}){
+  if(!doc) return null;
+  return (
+    <>
+      <div className="modal-backdrop" onClick={onClose}></div>
+      <div className="modal" role="dialog">
+        <button className="modal-close" onClick={onClose}><CloseIcon /></button>
+        <div className="modal-head">
+          <Cover title={doc.title} doc_id={doc.doc_id} cover_url={doc.cover_url} big />
+          <div style={{minWidth:0}}>
+            <h2 className="modal-title">{doc.title}</h2>
+            <div className="modal-meta">
+              by <b style={{color:"var(--text)"}}>{doc.author}</b>
+              {doc.year && <> &middot; {doc.year}</>}
+            </div>
+            {doc.genres && doc.genres.length > 0 && (
+              <div className="card-genres" style={{marginTop:10}}>
+                {doc.genres.slice(0,6).map((g,i) => <span key={i} className="genre">{g}</span>)}
+              </div>
+            )}
+          </div>
+        </div>
+        <p className="modal-summary">{doc.summary || doc.snippet}</p>
+      </div>
+    </>
+  );
+}
+
+function HistoryPop({items, onPick, onClose}){
+  return (
+    <div className="history-pop">
+      <h4>Recent searches</h4>
+      {items.length === 0
+        ? <div className="empty-h">Nothing yet. Try a search!</div>
+        : items.map((q,i) => (
+            <div key={i} className="row" onClick={() => { onPick(q); onClose(); }}>{q}</div>
+          ))
+      }
+    </div>
+  );
+}
+
+function CollectionsPop({stats, onPick, onClose}){
+  const counts = useMemo(() => {
+    if(!stats || !stats.top_genres) return [];
+    return stats.top_genres;
+  }, [stats]);
+  return (
+    <div className="collections-pop">
+      <h4>Browse by collection</h4>
+      <p className="sub">Click any genre to load its top books.</p>
+      <div className="collections-grid">
+        {counts.length === 0 && <div style={{color:"var(--muted)",fontSize:13}}>Loading...</div>}
+        {counts.slice(0, 36).map(g => (
+          <button key={g} onClick={() => { onPick(g); onClose(); }}>
+            <span>{g}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function App(){
+  const [query,setQuery]   = useState("");
+  const [mode,setMode]     = useState("bert");
+  const [sort,setSort]     = useState("relevance");
+  const [genres,setGenres] = useState([]);
+  const [authors,setAuthors] = useState([]);
+  const [yearMin,setYearMin] = useState("");
+  const [yearMax,setYearMax] = useState("");
+  const [data,setData]     = useState(null);
+  const [loading,setLoading] = useState(false);
+  const [error,setError]   = useState(null);
+  const [serverStatus,setServerStatus] = useState("checking");
+  const [stats,setStats]   = useState(null);
+  const [similarByDoc,setSimilarByDoc] = useState({});
+  const [openDoc,setOpenDoc] = useState(null);
+  const [history,setHistory] = useState(loadHistory());
+  const [likes,setLikes] = useState(loadLikes);
+  const [suggestions, setSuggestions] = useState(SUGGESTIONS_EN);
+  const toggleLike = useCallback((docId) => {
+    setLikes(prev => {
+      const next = new Set(prev);
+      if(next.has(docId)) next.delete(docId); else next.add(docId);
+      saveLikes(next);
+      return next;
+    });
+  }, []);
+  const [showHistory,setShowHistory] = useState(false);
+  const [showCollections,setShowCollections] = useState(false);
+  const [theme,setTheme] = useState(() => localStorage.getItem("gbs-theme") || "light");
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    localStorage.setItem("gbs-theme", theme);
+  }, [theme]);
+
+  useEffect(() => {
+    // Fetch enhanced suggestions from the API
+    fetch(`${API_BASE}/api/stats`)
+      .then(r => r.json())
+      .then(j => {
+        setServerStatus(j.ready ? "ok" : "warming");
+        setStats(j);
+
+        // Update suggestions if available
+        if (j.suggestions && j.suggestions.length > 0) {
+          setSuggestions(j.suggestions);
+        }
+
+        if(j.has_bert) setMode("bert");
+        else if(j.has_word2vec) setMode("word2vec");
+      })
+      .catch(() => setServerStatus("down"));
+
+    if(inputRef.current) inputRef.current.focus();
+    const onKey = e => {
+      if((e.ctrlKey || e.metaKey) && e.key === "k"){
+        e.preventDefault();
+        inputRef.current && inputRef.current.focus();
+      }
+      if(e.key === "Escape"){ setShowHistory(false); setShowCollections(false); setOpenDoc(null); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const runSearch = useCallback(async (q, opts={}) => {
+    if(!q || !q.trim()) return;
+    setLoading(true); setError(null); setSimilarByDoc({});
+    const body = {
+      query: q,
+      mode: opts.mode ?? mode,
+      top_k: 12,
+      genres: opts.genres ?? genres,
+      authors: opts.authors ?? authors,
+      sort_by: opts.sort ?? sort,
+      year_min: (opts.yearMin ?? yearMin) || null,
+      year_max: (opts.yearMax ?? yearMax) || null,
+    };
+    try {
+      const res = await fetch(`${API_BASE}/api/search`, {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify(body),
+      });
+      const j = await res.json();
+      if(!res.ok || j.error) throw new Error(j.error || "Search failed");
+      setData(j);
+      setHistory(h => {
+        const next = [q, ...h.filter(x => x !== q)].slice(0, 12);
+        saveHistory(next);
+        return next;
+      });
+    } catch(e){
+      setError(e.message || String(e));
+      setData(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [mode, sort, genres, authors, yearMin, yearMax]);
+
+  const fetchSimilar = useCallback(async (item) => {
+    if(similarByDoc[item.doc_id]){
+      setSimilarByDoc(s => { const n = {...s}; delete n[item.doc_id]; return n; });
+      return;
+    }
+    try {
+      const r = await fetch(`${API_BASE}/api/similar/${item.doc_id}?top_k=8`);
+      const j = await r.json();
+      setSimilarByDoc(s => ({...s, [item.doc_id]: j.results || []}));
+    } catch(e){
+      setError("Could not load similar books");
+    }
+  }, [similarByDoc]);
+
+  const openDocDetail = useCallback(async (item) => {
+    setOpenDoc({...item, summary: item.snippet});
+    try {
+      const r = await fetch(`${API_BASE}/api/document/${item.doc_id}`);
+      const j = await r.json();
+      if(!j.error) setOpenDoc(j);
+    } catch(_){}
+  }, []);
+
+  const onSubmit = e => { e.preventDefault(); runSearch(query); };
+  const onModeChange = id => {
+    setMode(id);
+    if(data && query.trim()) runSearch(query, {mode:id});
+  };
+  const onSortChange = id => {
+    setSort(id);
+    if(data && query.trim()) runSearch(query, {sort:id});
+  };
+  const onFilterChange = patch => {
+    if("genres" in patch) setGenres(patch.genres);
+    if("authors" in patch) setAuthors(patch.authors);
+    if("yearMin" in patch) setYearMin(patch.yearMin);
+    if("yearMax" in patch) setYearMax(patch.yearMax);
+    if(data && query.trim()) runSearch(query, patch);
+  };
+  const onSuggest = q => { setQuery(q); runSearch(q); };
+  const onAdvancedClick = () => {
+    if(!data){ inputRef.current && inputRef.current.focus(); return; }
+    const el = document.getElementById("filters-sidebar");
+    if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+  };
+  const onCollectionsClick = () => {
+    setShowCollections(v => !v);
+    setShowHistory(false);
+  };
+  const onPickCollection = (g) => {
+    setQuery(g.toLowerCase());
+    setGenres([g]);
+    runSearch(g.toLowerCase(), {genres:[g]});
+  };
+
+  const maxScore = useMemo(() => {
+    if(!data || !data.results || data.results.length === 0) return 1;
+    return Math.max(...data.results.map(r => r.score));
+  }, [data]);
+
+  const queryIsArabic = isArabic(query);
+  const hasResults = data && data.results && data.results.length > 0;
+
+  const statusLabel = serverStatus === "ok"
+    ? (stats ? `${stats.documents.toLocaleString()} books indexed` : "Online")
+    : serverStatus === "down" ? "Backend offline"
+    : serverStatus === "warming" ? "Starting up..."
+    : "Connecting...";
+
+  return (
+    <>
+      <header className="nav">
+        <div className="nav-inner">
+          <div className="brand">
+            <BrandLogo />
+            <span className="brand-name">
+              <GoogleWord />
+              <span style={{fontWeight:700,color:"var(--text)"}}>But Smarter</span>
+            </span>
+          </div>
+          <div className="nav-links">
+            <button className="nav-link" onClick={onAdvancedClick} title="Jump to advanced filters">
+              <AdvIcon /><span className="label">Advanced Search</span>
+            </button>
+            <button className="nav-link" onClick={onCollectionsClick} title="Pick a random popular genre">
+              <CollectionIcon /><span className="label">Collections</span>
+            </button>
+            <button className="nav-link" onClick={() => { setShowHistory(v => !v); setShowCollections(false); }} title="Recent searches">
+              <HistoryIcon /><span className="label">History</span>
+            </button>
+            <button className="icon-btn" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                    title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}>
+              {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+            </button>
+            <div className="avatar" title={statusLabel}>
+              <UserIcon />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {showHistory && (
+        <HistoryPop items={history}
+                    onPick={(q) => { setQuery(q); runSearch(q); }}
+                    onClose={() => setShowHistory(false)} />
+      )}
+      {showCollections && (
+        <CollectionsPop stats={stats}
+                        onPick={onPickCollection}
+                        onClose={() => setShowCollections(false)} />
+      )}
+
+      <main className="shell">
+        {!hasResults && !loading && (
+          <section className="hero">
+            <div className="doodle doodle-tl">
+              <StackBooksSketch />
+              <span className="note">Knowledge &gt;<br/><span className="u">Scroll</span></span>
+            </div>
+            <div className="doodle doodle-tr">
+              <OpenBookSketch />
+              <span className="note"><span className="u">Real</span> books.<br/><span class="u">Real</span> impact.</span>
+            </div>
+            <div className="doodle doodle-bl">
+              <span class="note">Caffeine<br/>+ Curiosity<br/>= <span class="u">Power</span></span>
+              <CoffeeSketch />
+            </div>
+            <div className="doodle doodle-br">
+              <span class="note">One more<br/>chapter <span class="u">(lie)</span></span>
+              <StackArrowSketch />
+            </div>
+
+            <CrownIcon />
+            <h1 className="hero-title">
+              <GoogleWord size="clamp(48px,7vw,86px)" />
+              <span style={{fontWeight:700}}>But Smarter</span>
+            </h1>
+            <p className="hero-subtitle">
+              Because apparently reading 3 Reddit comments <span class="underline">isn't research</span>.
+            </p>
+
+            <form className="search-wrap" onSubmit={onSubmit}>
+              <div className="search-bar">
+                <span className="search-icon"><SearchIcon size={20} /></span>
+                <input
+                  ref={inputRef}
+                  className={`search-input ${queryIsArabic ? "rtl" : ""}`}
+                  type="text"
+                  placeholder="Search for books by title, author, theme, plot..."
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  autoComplete="off"
+                />
+                <button className="search-btn" type="submit"
+                        disabled={loading || !query.trim() || serverStatus !== "ok"}>
+                  {loading ? <><span className="spinner"/>Searching</> : <>Search</>}
+                </button>
+              </div>
+
+              <div className="quick-row">
+                <span className="quick-label">try:</span>
+                {suggestions.slice(0, 8).map((q, i) => (
+                  <button key={i} type="button" className="chip" onClick={() => onSuggest(q)}>
+                    {q}
+                  </button>
+                ))}
+              </div>
+            </form>
+
+            <div className="heart-row">
+              <span class="heart">♥</span> Made for readers, not ad revenue.
+            </div>
+
+            <section className="feat-section">
+              <div className="feat-eyebrow">what makes it smart</div>
+              <div className="feat-grid">
+                <div className="feat-card">
+                  <div className="feat-icon"><BrainIcon /></div>
+                  <h3 className="feat-h">Four brains, one search</h3>
+                  <p className="feat-p">
+                    Picks between <code>TF-IDF</code>, <code>Rocchio</code>, <code>Word2Vec</code>{' '}
+                    and <code>Sentence-BERT</code> &mdash; from fast keyword match to deep semantic rerank.
+                  </p>
+                </div>
+                <div className="feat-card">
+                  <div className="feat-icon red"><GlobeIcon /></div>
+                  <h3 className="feat-h">Speaks English &amp; Arabic</h3>
+                  <p className="feat-p">
+                    Type <span style={{fontFamily:"'IBM Plex Sans Arabic',sans-serif"}}>"ساحر صغير"</span>{' '}
+                    or "young magician" &mdash; the engine detects the language and searches the same index.
+                  </p>
+                </div>
+                <div className="feat-card">
+                  <div className="feat-icon green"><SummaryIcon /></div>
+                  <h3 className="feat-h">Real summaries, no fluff</h3>
+                  <p className="feat-p">
+                    Indexed against the <b>CMU Book Summary</b> dataset &mdash; over{' '}
+                    {stats ? <b>{stats.documents.toLocaleString()}</b> : "16,000"} actual book plots,
+                    not blurbs or reviews.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {stats && stats.top_genres && stats.top_genres.length > 0 && (
+              <div className="genre-jump">
+                <div className="genre-jump-label">or jump into a genre</div>
+                <div className="genre-jump-row">
+                  {stats.top_genres.slice(0, 10).map(g => (
+                    <button key={g} type="button" className="chip"
+                            onClick={() => onPickCollection(g)}>
+                      {g}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </section>
+        )}
+
+        {hasResults || loading ? (
+          <>
+            <form className="search-wrap wide" onSubmit={onSubmit} style={{marginTop:30}}>
+              <div className="search-bar">
+                <span className="search-icon"><SearchIcon size={20} /></span>
+                <input
+                  ref={inputRef}
+                  className={`search-input ${queryIsArabic ? "rtl" : ""}`}
+                  type="text"
+                  placeholder="Search for books..."
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  autoComplete="off"
+                />
+                <button className="search-btn" type="submit"
+                        disabled={loading || !query.trim() || serverStatus !== "ok"}>
+                  {loading ? <><span className="spinner"/>Searching</> : <>Search</>}
+                </button>
+              </div>
+
+              {data && data.translated_query && (
+                <div className="translation-note">
+                  <LangIcon />
+                  <span>
+                    Detected <b>{data.detected_lang === "ar" ? "Arabic" : data.detected_lang}</b> &mdash;
+                    searched as <b>"{data.translated_query}"</b>
+                  </span>
+                </div>
+              )}
+            </form>
+
+            <div className="toolbar">
+              <div className="results-meta">
+                {loading && !data && <>Searching <b>"{query}"</b>&hellip;</>}
+                {data && hasResults && (
+                  <>About <b>{data.count}</b> books for <b>"{data.query}"</b>
+                    <span style={{color:"var(--muted)"}}> &middot; {data.elapsed_ms.toFixed(0)} ms</span>
+                    {data.expansion && data.expansion.length > 0 && (
+                      <span style={{color:"var(--muted)"}}> &middot; expanded with {data.expansion.length} terms</span>
+                    )}
+                  </>
+                )}
+              </div>
+              <div className="toolbar-right">
+                <span style={{color:"var(--text-3)",fontSize:12.5}}>Style</span>
+                <div className="seg">
+                  {MODES.map(m => {
+                    const disabled =
+                      (m.id === "word2vec" && stats && !stats.has_word2vec) ||
+                      (m.id === "bert"     && stats && !stats.has_bert);
+                    return (
+                      <button key={m.id} type="button"
+                              className={mode === m.id ? "active" : ""}
+                              disabled={disabled}
+                              title={m.hint + (disabled ? " (unavailable)" : "")}
+                              onClick={() => onModeChange(m.id)}>
+                        {m.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                <select className="select" value={sort} onChange={e => onSortChange(e.target.value)}>
+                  {SORTS.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+                </select>
+              </div>
+            </div>
+
+            <div className="layout">
+              <FilterPanel stats={stats}
+                           selGenres={genres} selAuthors={authors}
+                           yearMin={yearMin} yearMax={yearMax}
+                           onChange={onFilterChange} />
+              <div>
+                {loading && !data && (
+                  <div className="results">
+                    {Array.from({length:4}).map((_,i) => <SkeletonCard key={i} />)}
+                  </div>
+                )}
+                {hasResults && (
+                  <div className="results">
+                    {data.results.map(item => (
+                      <ResultCard key={item.doc_id}
+                                  item={item}
+                                  maxScore={maxScore}
+                                  onSimilar={fetchSimilar}
+                                  similar={similarByDoc[item.doc_id]}
+                                  onOpen={openDocDetail}
+                                  liked={likes.has(item.doc_id)}
+                                  onToggleLike={toggleLike} />
+                    ))}
+                  </div>
+                )}
+                {data && !hasResults && !loading && (
+                  <div className="empty">
+                    <div className="empty-icon"><BookIcon /></div>
+                    <h3>No matches yet</h3>
+                    <p>Try different wording, broader terms, or remove a filter.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        ) : null}
+
+        {serverStatus === "down" && (
+          <div className="error" style={{marginTop:24}}>
+            We can't reach the search service. Make sure the backend is running on port 5000.
+          </div>
+        )}
+
+        {error && <div className="error">{error}</div>}
+      </main>
+
+      {openDoc && <DetailModal doc={openDoc} onClose={() => setOpenDoc(null)} />}
+
+      <footer className="footer">
+        <b>Google But Smarter</b> &middot; TF-IDF + Rocchio + Word2Vec + Sentence-BERT &middot; English &amp; Arabic
+      </footer>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
