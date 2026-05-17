@@ -11,8 +11,6 @@ A Flask + (TF‑IDF / Rocchio / Word2Vec / Sentence‑BERT) book search engine w
 ### 1) Python dependencies
 Create a virtual environment and install requirements (you may need to install packages matching the script imports).
 
-> Note: this repo currently does not include a `requirements.txt`.
-
 ### 2) Start the backend
 ```bash
 python Search_Engine.py
